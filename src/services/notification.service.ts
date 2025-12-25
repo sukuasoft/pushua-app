@@ -1,7 +1,6 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-
-const API_URL = 'http://localhost:3000'; // Change this to your API URL
+import { config } from '../constants/config';
 
 export interface SendNotificationData {
   domain: string;
@@ -23,7 +22,7 @@ export const notificationService = {
     const apiKey = await SecureStore.getItemAsync('apiKey');
     
     const response = await axios.post<NotificationResponse>(
-      `${API_URL}/notifications/send`,
+      `${config.api.baseURL}/notifications/send`,
       data,
       {
         headers: {
