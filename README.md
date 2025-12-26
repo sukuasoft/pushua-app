@@ -65,16 +65,6 @@ npm run android
 npm run ios
 ```
 
-## 📱 Configuração de Notificações Push
-
-### Android
-1. Adicione o arquivo `google-services.json` na raiz do projeto
-2. Configure o Firebase Cloud Messaging (FCM)
-
-### iOS
-1. Configure o Apple Push Notification Service (APNs)
-2. Adicione as credenciais no Expo
-
 ## 🎯 Estrutura do Projeto
 
 ```

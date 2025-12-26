@@ -3,7 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import { config } from '../constants/config';
 
 const api = axios.create({
-  baseURL: config.api.baseURL,
+  baseURL: config.api.baseURL +"/api",
   headers: {
     'Content-Type': 'application/json',
   },

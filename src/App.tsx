@@ -3,10 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { AuthProvider, useAuth } from './src/contexts/AuthContext';
-import { AppNavigator } from './src/navigation/AppNavigator';
-import { AuthNavigator } from './src/navigation/AuthNavigator';
-import { Colors } from './src/constants/theme';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AppNavigator } from './navigation/AppNavigator';
+import { AuthNavigator } from './navigation/AuthNavigator';
+import { Colors } from './constants/theme';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -26,7 +26,7 @@ function AppContent() {
   );
 }
 
-export default function App() {
+export function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <AuthProvider>

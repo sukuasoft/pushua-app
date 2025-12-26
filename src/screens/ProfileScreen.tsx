@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Platform } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { BrutalCard, BrutalCardHeader } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';

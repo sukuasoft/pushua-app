@@ -16,15 +16,17 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pushua.app"
+      "bundleIdentifier": "com.pushua.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#24FE9C"
       },
-      "package": "com.pushua.app",
-      "googleServicesFile": "./google-services.json"
+      "package": "com.pushua.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,7 +40,20 @@
         }
       ],
       "expo-asset",
-      "expo-font"
-    ]
+      "expo-font",
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a6c053e0-886d-41b9-8607-a89e3061e2db"
+      }
+    },
+    "owner": "sukuasoft"
   }
 }

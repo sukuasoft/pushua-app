@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Image,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { BrutalButton } from '../components/BrutalButton';
@@ -60,7 +61,7 @@ export const LoginScreen = () => {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Text style={styles.logo}>📬 PUSHUA</Text>
+          <Text style={styles.logo}>PUSHUA</Text> 
           <Text style={styles.tagline}>Push Notifications, Simplified</Text>
         </View>
 

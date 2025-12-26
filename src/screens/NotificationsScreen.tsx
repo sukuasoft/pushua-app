@@ -16,7 +16,7 @@ import { BrutalCard, BrutalCardHeader } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalInput } from '../components/BrutalInput';
 import { BrutalBadge } from '../components/BrutalBadge';
-import { Colors, Spacing, FontSizes } from '../constants/theme';
+import { Colors, Spacing, FontSizes, BorderRadius } from '../constants/theme';
 
 export const NotificationsScreen = () => {
   const { user } = useAuth();
