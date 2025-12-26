@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pushua.app",
+      "bundleIdentifier": "com.ssukuakueche.pushua",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#24FE9C"
       },
-      "package": "com.pushua.app"
+      "package": "com.ssukuakueche.pushua"
     },
     "web": {
       "favicon": "./assets/favicon.png"
