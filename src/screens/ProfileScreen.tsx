@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Platform, ImageBackground } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { BrutalCard, BrutalCardHeader } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
@@ -32,9 +32,11 @@ export const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-  
+
       <View style={styles.header}>
-        <Text style={styles.title}>Perfil</Text>
+        <View>
+          <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
+        </View>
       </View>
 
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
@@ -53,8 +55,8 @@ export const ProfileScreen = () => {
         </BrutalCard>
 
         <BrutalCard style={styles.apiCard}>
-          <BrutalCardHeader 
-            title="API Key" 
+          <BrutalCardHeader
+            title="API Key"
             subtitle="Use esta chave para autenticar suas requisições"
           />
 
@@ -98,16 +100,19 @@ export const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  icon: {
+    width: 120,
+    height: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.white,
   },
   header: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.black,
     padding: Spacing.lg,
     borderBottomWidth: 3,
     borderBottomColor: Colors.black,
-    alignItems: 'center',
   },
   headerIcon: {
     marginBottom: Spacing.sm,

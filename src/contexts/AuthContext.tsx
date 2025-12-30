@@ -22,15 +22,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   async function loadStorageData() {
+    
     try {
-      const storedUser = await authService.getCurrentUser();
-      if (storedUser) {
-        setUser(storedUser);
-        // Store API key separately for easier access
-        await SecureStore.setItemAsync('apiKey', storedUser.apiKey);
+      setLoading(true);
+      // First check if a token exists
+      const isAuth = await authService.isAuthenticated();
+      
+      if (isAuth) {
+        // Token exists, validate it by calling /users/me
+        try {
+          const user = await authService.getMe();
+          setUser(user);
+          await SecureStore.setItemAsync('apiKey', user.apiKey);
+        } catch (error) {
+          // Token is invalid or expired, clear auth
+          console.log('Token validation failed, clearing authentication');
+          await authService.logout();
+          setUser(null);
+        }
+      } else {
+        // No token stored
+        setUser(null);
       }
     } catch (error) {
       console.error('Error loading user data:', error);
+      setUser(null);
     } finally {
       setLoading(false);
     }

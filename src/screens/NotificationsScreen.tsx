@@ -7,6 +7,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -96,8 +97,9 @@ export const NotificationsScreen = () => {
       >
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.title}>Notificações</Text>
-            <Text style={styles.subtitle}>Enviar push notifications</Text>
+            <View>
+                  <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
+                </View>
           </View>
 
           <ScrollView
@@ -245,12 +247,16 @@ export const NotificationsScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  icon: {
+    width: 120,
+    height: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.white,     
   },
   header: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.black,
     padding: Spacing.lg,
     borderBottomWidth: 3,
     borderBottomColor: Colors.black,
