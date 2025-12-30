@@ -14,7 +14,7 @@ import { BrutalCard, BrutalCardHeader } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
-import { ScrollView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import AppWrapper from '@/components/AppWrapper';
 
 export const HomeScreen = () => {
@@ -84,7 +84,8 @@ export const HomeScreen = () => {
 
   return (
     <AppWrapper>
-      <View style={styles.container}>
+             <GestureHandlerRootView style={styles.container}>
+     
         <View style={styles.header}>
           <View>
             <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
@@ -128,7 +129,7 @@ export const HomeScreen = () => {
             }
           />
         </ScrollView>
-      </View>
+      </GestureHandlerRootView>
 
     </AppWrapper>
   );

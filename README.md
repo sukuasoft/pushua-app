@@ -1,4 +1,4 @@
-# Pushua App 📬
+# Pushua App
 
 Aplicação mobile React Native Expo para o sistema Pushua de notificações push.
 
@@ -26,7 +26,7 @@ Aplicação mobile React Native Expo para o sistema Pushua de notificações pus
 ## 🛠️ Tecnologias
 
 - React Native
-- Expo SDK 52
+- Expo SDK 54
 - React Navigation
 - @gorhom/bottom-sheet
 - Expo Notifications
@@ -47,8 +47,8 @@ npm install
 
 3. **Configure as variáveis de ambiente**
 ```bash
-# Edite o arquivo src/services/api.ts e configure a URL da API
-const API_URL = 'http://seu-servidor:3000';
+# Edite o arquivo .env e configure a URL da API
+EXPO_PUBLIC_API_URL=http://seu-servidor:3000
 ```
 
 4. **Inicie o projeto**
