@@ -16,9 +16,9 @@ import { BrutalButton } from '../components/BrutalButton';
 import { BrutalInput } from '../components/BrutalInput';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const SubscriptionsScreen = () => {
-  const { expoPushToken } = useNotifications();
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -59,16 +59,10 @@ export const SubscriptionsScreen = () => {
       return;
     }
 
-    if (!expoPushToken) {
-      Alert.alert('Erro', 'Token de push não disponível');
-      return;
-    }
-
     setCreating(true);
     try {
       await subscriptionService.create({
-        topicName: topicName.trim(),
-        deviceToken: expoPushToken,
+        topicName: topicName.trim()
       });
       Alert.alert('Sucesso', 'Subscrição criada com sucesso!');
       setTopicName('');
@@ -111,9 +105,6 @@ export const SubscriptionsScreen = () => {
           {new Date(item.createdAt).toLocaleDateString('pt-BR')}
         </Text>
       </View>
-      <Text style={styles.token} numberOfLines={1}>
-        {item.deviceToken}
-      </Text>
       <BrutalButton
         title="REMOVER"
         onPress={() => handleDeleteSubscription(item.id)}
@@ -125,6 +116,7 @@ export const SubscriptionsScreen = () => {
   );
 
   return (
+    <SafeAreaView  style={styles.container}>
     <GestureHandlerRootView style={styles.container}>
       <View style={styles.container}>
         <View style={styles.header}>
@@ -176,15 +168,6 @@ export const SubscriptionsScreen = () => {
               autoCapitalize="none"
             />
 
-            {expoPushToken && (
-              <View style={styles.tokenInfo}>
-                <Text style={styles.tokenLabel}>Device Token:</Text>
-                <Text style={styles.tokenValue} numberOfLines={1}>
-                  {expoPushToken}
-                </Text>
-              </View>
-            )}
-
             <BrutalButton
               title="CRIAR SUBSCRIÇÃO"
               onPress={handleCreateSubscription}
@@ -196,6 +179,7 @@ export const SubscriptionsScreen = () => {
         </BottomSheet>
       </View>
     </GestureHandlerRootView>
+    </SafeAreaView>
   );
 };
 

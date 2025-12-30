@@ -6,14 +6,16 @@ import {
   FlatList,
   Alert,
   RefreshControl,
+  ImageBackground,
 } from 'react-native';
-import { useAuth } from '../contexts/AuthContext';
-import { useNotifications } from '../hooks/useNotifications';
+import { useAuth } from '../contexts/AuthContext';import { MaterialIcons } from '@expo/vector-icons';import { useNotifications } from '../hooks/useNotifications';
 import { subscriptionService, Subscription } from '../services/subscription.service';
 import { BrutalCard, BrutalCardHeader } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const HomeScreen = () => {
   const { user } = useAuth();
@@ -70,9 +72,6 @@ export const HomeScreen = () => {
           {new Date(item.createdAt).toLocaleDateString('pt-BR')}
         </Text>
       </View>
-      <Text style={styles.deviceToken} numberOfLines={1}>
-        Token: {item.deviceToken}
-      </Text>
       <BrutalButton
         title="EXCLUIR"
         onPress={() => handleDeleteSubscription(item.id)}
@@ -84,11 +83,20 @@ export const HomeScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>  
+    
       <View style={styles.header}>
-        <Text style={styles.title}>📬 PUSHUA</Text>
-        <Text style={styles.subtitle}>Bem-vindo, {user?.email}</Text>
+        <View>
+          <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
+        </View>
       </View>
+          <ScrollView
+         refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={loadSubscriptions} />
+        }
+                style={styles.scrollContainer}
+                keyboardShouldPersistTaps="handled"
+              >
 
       <BrutalCard style={styles.infoCard}>
         <BrutalCardHeader title="Informações" />
@@ -96,20 +104,7 @@ export const HomeScreen = () => {
           <Text style={styles.infoLabel}>Domínio:</Text>
           <BrutalBadge text={user?.domain || ''} variant="success" />
         </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>API Key:</Text>
-          <Text style={styles.infoValue} numberOfLines={1}>
-            {user?.apiKey}
-          </Text>
-        </View>
-        {expoPushToken && (
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Push Token:</Text>
-            <Text style={styles.infoValue} numberOfLines={1}>
-              {expoPushToken}
-            </Text>
-          </View>
-        )}
+      
       </BrutalCard>
 
       <View style={styles.subscriptionsHeader}>
@@ -118,13 +113,12 @@ export const HomeScreen = () => {
       </View>
 
       <FlatList
+      scrollEnabled={false}
         data={subscriptions}
         renderItem={renderSubscriptionItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={loadSubscriptions} />
-        }
+       
         ListEmptyComponent={
           <BrutalCard>
             <Text style={styles.emptyText}>
@@ -133,18 +127,22 @@ export const HomeScreen = () => {
           </BrutalCard>
         }
       />
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  icon: {
+    width: 120,
+    height: 20,
+  },
   container: {
     flex: 1,
-    backgroundColor: Colors.gray,
   },
   header: {
-    backgroundColor: Colors.primary,
     padding: Spacing.lg,
+    backgroundColor: Colors.black,
     borderBottomWidth: 3,
     borderBottomColor: Colors.black,
   },
@@ -216,12 +214,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.darkGray,
   },
-  deviceToken: {
-    fontSize: FontSizes.sm,
-    fontWeight: '600',
-    color: Colors.darkGray,
-    marginBottom: Spacing.md,
-  },
   deleteButton: {
     marginTop: Spacing.sm,
   },
@@ -231,4 +223,7 @@ const styles = StyleSheet.create({
     color: Colors.darkGray,
     textAlign: 'center',
   },
+  scrollContainer: {
+    flex: 1,
+  }
 });

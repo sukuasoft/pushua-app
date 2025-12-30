@@ -5,6 +5,8 @@ import { BrutalCard, BrutalCardHeader } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
+import { MaterialIcons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const ProfileScreen = () => {
   const { user, signOut } = useAuth();
@@ -29,14 +31,13 @@ export const ProfileScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+  
       <View style={styles.header}>
-        <Text style={styles.headerEmoji}>👤</Text>
         <Text style={styles.title}>Perfil</Text>
-        <Text style={styles.subtitle}>Gerencie sua conta</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
         <BrutalCard>
           <BrutalCardHeader title="Informações da Conta" />
 
@@ -48,13 +49,6 @@ export const ProfileScreen = () => {
           <View style={styles.infoRow}>
             <Text style={styles.label}>Domínio:</Text>
             <BrutalBadge text={user?.domain || ''} variant="success" />
-          </View>
-
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>ID:</Text>
-            <Text style={styles.valueSmall} numberOfLines={1}>
-              {user?.id}
-            </Text>
           </View>
         </BrutalCard>
 
@@ -79,7 +73,10 @@ export const ProfileScreen = () => {
         </BrutalCard>
 
         <BrutalCard style={styles.aboutCard}>
-          <Text style={styles.aboutTitle}>📬 Sobre o Pushua</Text>
+          <View style={styles.aboutTitleRow}>
+            <MaterialIcons name="info" size={24} color="black" />
+            <Text style={styles.aboutTitle}>Sobre o Pushua</Text>
+          </View>
           <Text style={styles.aboutText}>
             Pushua é uma plataforma simples e eficiente para envio de notificações push.
           </Text>
@@ -96,14 +93,14 @@ export const ProfileScreen = () => {
           style={styles.logoutButton}
         />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.gray,
+    backgroundColor: Colors.white,
   },
   header: {
     backgroundColor: Colors.primary,
@@ -112,8 +109,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.black,
     alignItems: 'center',
   },
-  headerEmoji: {
-    fontSize: 48,
+  headerIcon: {
     marginBottom: Spacing.sm,
   },
   title: {
@@ -175,11 +171,16 @@ const styles = StyleSheet.create({
     marginTop: Spacing.lg,
     backgroundColor: Colors.primary,
   },
+  aboutTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
   aboutTitle: {
     fontSize: FontSizes.lg,
     fontWeight: '900',
     color: Colors.black,
-    marginBottom: Spacing.md,
+    marginLeft: Spacing.sm,
   },
   aboutText: {
     fontSize: FontSizes.md,

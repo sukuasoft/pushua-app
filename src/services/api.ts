@@ -13,6 +13,10 @@ const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     const token = await SecureStore.getItemAsync('token');
+    const xAPiKey = await SecureStore.getItemAsync('apiKey');
+    if (xAPiKey) {
+      config.headers['x-api-key'] = xAPiKey;
+    }
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

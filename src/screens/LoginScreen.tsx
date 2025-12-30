@@ -9,6 +9,7 @@ import {
   Alert,
   Image,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../contexts/AuthContext';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalInput } from '../components/BrutalInput';
@@ -52,69 +53,71 @@ export const LoginScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoid}
       >
-        <View style={styles.header}>
-          <Text style={styles.logo}>PUSHUA</Text> 
-          <Text style={styles.tagline}>Push Notifications, Simplified</Text>
-        </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.header}>
+            <Text style={styles.logo}>PUSHUA</Text> 
+            <Text style={styles.tagline}>Push Notifications, Simplified</Text>
+          </View>
 
-        <BrutalCard style={styles.card}>
-          <Text style={styles.title}>{isLogin ? 'LOGIN' : 'CRIAR CONTA'}</Text>
+          <BrutalCard style={styles.card}>
+            <Text style={styles.title}>{isLogin ? 'LOGIN' : 'CRIAR CONTA'}</Text>
 
-          <BrutalInput
-            label="Email"
-            placeholder="seu@email.com"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoComplete="email"
-          />
-
-          <BrutalInput
-            label="Senha"
-            placeholder="••••••••"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoCapitalize="none"
-          />
-
-          {!isLogin && (
             <BrutalInput
-              label="Domínio"
-              placeholder="@meuapp"
-              value={domain}
-              onChangeText={setDomain}
+              label="Email"
+              placeholder="seu@email.com"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+            />
+
+            <BrutalInput
+              label="Senha"
+              placeholder="••••••••"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
               autoCapitalize="none"
             />
-          )}
 
-          <BrutalButton
-            title={isLogin ? 'ENTRAR' : 'CRIAR CONTA'}
-            onPress={handleSubmit}
-            loading={loading}
-            size="large"
-            style={styles.submitButton}
-          />
+            {!isLogin && (
+              <BrutalInput
+                label="Domínio"
+                placeholder="@meuapp"
+                value={domain}
+                onChangeText={setDomain}
+                autoCapitalize="none"
+              />
+            )}
 
-          <BrutalButton
-            title={isLogin ? 'Criar uma conta' : 'Já tenho conta'}
-            onPress={() => setIsLogin(!isLogin)}
-            variant="outline"
-            size="medium"
-            style={styles.switchButton}
-          />
-        </BrutalCard>
-      </ScrollView>
-    </KeyboardAvoidingView>
+            <BrutalButton
+              title={isLogin ? 'ENTRAR' : 'CRIAR CONTA'}
+              onPress={handleSubmit}
+              loading={loading}
+              size="large"
+              style={styles.submitButton}
+            />
+
+            <BrutalButton
+              title={isLogin ? 'Criar uma conta' : 'Já tenho conta'}
+              onPress={() => setIsLogin(!isLogin)}
+              variant="outline"
+              size="medium"
+              style={styles.switchButton}
+            />
+          </BrutalCard>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -122,6 +125,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.primary,
+  },
+  keyboardAvoid: {
+    flex: 1,
   },
   scrollContent: {
     flexGrow: 1,

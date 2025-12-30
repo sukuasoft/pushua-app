@@ -1,25 +1,23 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/HomeScreen';
 import { SubscriptionsScreen } from '../screens/SubscriptionsScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { Colors, FontSizes } from '../constants/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 
-const TabIcon: React.FC<{ icon: string; focused: boolean }> = ({ icon, focused }) => (
-  <Text style={[styles.tabIcon, focused && styles.tabIconFocused]}>{icon}</Text>
-);
-
 export const AppNavigator = () => {
+  const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
+        tabBarStyle: {...styles.tabBar, height: styles.tabBar.height + insets.bottom },
         tabBarActiveTintColor: Colors.black,
         tabBarInactiveTintColor: Colors.darkGray,
         tabBarLabelStyle: styles.tabLabel,
@@ -30,7 +28,14 @@ export const AppNavigator = () => {
         component={HomeScreen}
         options={{
           tabBarLabel: 'Início',
-          tabBarIcon: ({ focused }) => <TabIcon icon="🏠" focused={focused} />,
+          tabBarIcon: ({ focused, color }) => (
+            <MaterialIcons 
+              name="home" 
+              size={28} 
+              color={color}
+              style={focused && styles.iconFocused}
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -38,7 +43,14 @@ export const AppNavigator = () => {
         component={SubscriptionsScreen}
         options={{
           tabBarLabel: 'Subscrições',
-          tabBarIcon: ({ focused }) => <TabIcon icon="📝" focused={focused} />,
+          tabBarIcon: ({ focused, color }) => (
+            <MaterialIcons 
+              name="list-alt" 
+              size={28} 
+              color={color}
+              style={focused && styles.iconFocused}
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -46,7 +58,14 @@ export const AppNavigator = () => {
         component={NotificationsScreen}
         options={{
           tabBarLabel: 'Notificações',
-          tabBarIcon: ({ focused }) => <TabIcon icon="📬" focused={focused} />,
+          tabBarIcon: ({ focused, color }) => (
+            <MaterialIcons 
+              name="notifications" 
+              size={28} 
+              color={color}
+              style={focused && styles.iconFocused}
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -54,7 +73,14 @@ export const AppNavigator = () => {
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Perfil',
-          tabBarIcon: ({ focused }) => <TabIcon icon="👤" focused={focused} />,
+          tabBarIcon: ({ focused, color }) => (
+            <MaterialIcons 
+              name="account-circle" 
+              size={28} 
+              color={color}
+              style={focused && styles.iconFocused}
+            />
+          ),
         }}
       />
     </Tab.Navigator>
@@ -66,20 +92,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderTopWidth: 3,
     borderTopColor: Colors.black,
-    height: 70,
-    paddingBottom: 10,
+    height: 60,
+    paddingBottom: Platform.OS === 'android' ? 25 : 10,
     paddingTop: 10,
   },
   tabLabel: {
     fontSize: FontSizes.xs,
     fontWeight: '900',
   },
-  tabIcon: {
-    fontSize: 24,
-    opacity: 0.5,
-  },
-  tabIconFocused: {
-    opacity: 1,
+  iconFocused: {
     transform: [{ scale: 1.2 }],
   },
 });

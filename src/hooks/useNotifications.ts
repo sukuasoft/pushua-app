@@ -1,26 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
+import { notificationService } from '../services/notification.service';
+import * as SecureStore from 'expo-secure-store';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 });
 
 export function useNotifications() {
   const [expoPushToken, setExpoPushToken] = useState<string>('');
   const [notification, setNotification] = useState<Notifications.Notification>();
-  const notificationListener = useRef<Notifications.Subscription>();
-  const responseListener = useRef<Notifications.Subscription>();
+  const notificationListener = useRef<Notifications.Subscription>(null);
+  const responseListener = useRef<Notifications.Subscription>(null);
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
       if (token) {
         setExpoPushToken(token);
+        // Register device with API when token is obtained
+        registerDeviceWithAPI(token);
       }
     });
 
@@ -39,10 +45,33 @@ export function useNotifications() {
     };
   }, []);
 
+  // Function to manually re-register device (useful after login)
+  const registerDevice = async () => {
+    if (expoPushToken) {
+      await registerDeviceWithAPI(expoPushToken);
+    }
+  };
+
   return {
     expoPushToken,
     notification,
+    registerDevice,
   };
+}
+
+async function registerDeviceWithAPI(token: string) {
+  try {
+    // Only register if user is authenticated
+    const authToken = await SecureStore.getItemAsync('token');
+    if (authToken) {
+      console.log('Registering device with API...');
+      const response = await notificationService.registerDevice(token);
+      console.log('Device registered successfully:', response.id);
+    }
+  } catch (error) {
+    console.error('Failed to register device with API:', error);
+    // Don't throw error, just log it - app should continue working
+  }
 }
 
 async function registerForPushNotificationsAsync() {
@@ -67,13 +96,13 @@ async function registerForPushNotificationsAsync() {
     }
     
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
+      console.warn('Failed to get push token for push notification!');
       return;
     }
     
     token = (await Notifications.getExpoPushTokenAsync()).data;
   } else {
-    alert('Must use physical device for Push Notifications');
+    console.warn('Must use physical device for Push Notifications');
   }
 
   return token;

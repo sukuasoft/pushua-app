@@ -4,14 +4,12 @@ export interface Subscription {
   id: string;
   userId: string;
   topicName: string;
-  deviceToken: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface CreateSubscriptionData {
   topicName: string;
-  deviceToken: string;
 }
 
 export const subscriptionService = {
@@ -30,10 +28,6 @@ export const subscriptionService = {
     return response.data;
   },
 
-  async getByDeviceToken(deviceToken: string): Promise<Subscription[]> {
-    const response = await api.get<Subscription[]>(`/subscriptions?deviceToken=${deviceToken}`);
-    return response.data;
-  },
 
   async delete(id: string): Promise<{ message: string }> {
     const response = await api.delete<{ message: string }>(`/subscriptions/${id}`);

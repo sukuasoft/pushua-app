@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useAuth } from '../contexts/AuthContext';
@@ -17,6 +18,7 @@ import { BrutalButton } from '../components/BrutalButton';
 import { BrutalInput } from '../components/BrutalInput';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../constants/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const NotificationsScreen = () => {
   const { user } = useAuth();
@@ -81,11 +83,12 @@ export const NotificationsScreen = () => {
 
   const handleTestNotification = () => {
     setTopicName('test');
-    setTitle('🧪 Notificação de Teste');
-    setBody('Esta é uma notificação de teste do Pushua! Se você está recebendo isso, tudo está funcionando perfeitamente! 🎉');
+    setTitle('Notificação de Teste');
+    setBody('Esta é uma notificação de teste do Pushua! Se você está recebendo isso, tudo está funcionando perfeitamente!');
   };
 
   return (
+    <SafeAreaView style={styles.container}>
     <GestureHandlerRootView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -101,15 +104,6 @@ export const NotificationsScreen = () => {
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
           >
-            <BrutalCard style={styles.infoCard}>
-              <BrutalCardHeader title="API Key" subtitle="Use esta chave para autenticar" />
-              <View style={styles.apiKeyContainer}>
-                <Text style={styles.apiKeyText} numberOfLines={1}>
-                  {user?.apiKey}
-                </Text>
-              </View>
-              <BrutalBadge text={`Domínio: ${user?.domain}`} variant="success" />
-            </BrutalCard>
 
             <BrutalCard>
               <BrutalCardHeader title="Enviar Notificação" />
@@ -150,7 +144,7 @@ export const NotificationsScreen = () => {
 
               <View style={styles.buttonRow}>
                 <BrutalButton
-                  title="🧪 TESTE"
+                  title="TESTE"
                   onPress={handleTestNotification}
                   variant="outline"
                   size="medium"
@@ -166,7 +160,10 @@ export const NotificationsScreen = () => {
             </BrutalCard>
 
             <BrutalCard style={styles.tipsCard}>
-              <Text style={styles.tipsTitle}>💡 Dicas</Text>
+              <View style={styles.tipsTitleRow}>
+                <MaterialIcons name="lightbulb" size={24} color="black" />
+                <Text style={styles.tipsTitle}>Dicas</Text>
+              </View>
               <Text style={styles.tipText}>
                 • Use tópicos significativos para organizar suas notificações
               </Text>
@@ -195,7 +192,10 @@ export const NotificationsScreen = () => {
 
               <View style={styles.previewCard}>
                 <View style={styles.previewHeader}>
-                  <Text style={styles.previewAppName}>📬 Pushua</Text>
+                  <View style={styles.previewAppNameRow}>
+                    <MaterialIcons name="mail" size={20} color="black" />
+                    <Text style={styles.previewAppName}>Pushua</Text>
+                  </View>
                   <Text style={styles.previewTime}>agora</Text>
                 </View>
 
@@ -204,7 +204,10 @@ export const NotificationsScreen = () => {
 
                 {imageUrl && (
                   <View style={styles.previewImagePlaceholder}>
-                    <Text style={styles.previewImageText}>🖼️ Imagem será exibida aqui</Text>
+                    <View style={styles.imageRow}>
+                      <MaterialIcons name="image" size={20} color="black" />
+                      <Text style={styles.previewImageText}>Imagem será exibida aqui</Text>
+                    </View>
                     <Text style={styles.previewImageUrl} numberOfLines={1}>
                       {imageUrl}
                     </Text>
@@ -237,13 +240,14 @@ export const NotificationsScreen = () => {
         </View>
       </KeyboardAvoidingView>
     </GestureHandlerRootView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.gray,
+    backgroundColor: Colors.white,     
   },
   header: {
     backgroundColor: Colors.primary,
@@ -296,11 +300,16 @@ const styles = StyleSheet.create({
     marginTop: Spacing.lg,
     backgroundColor: Colors.primary,
   },
+  tipsTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
   tipsTitle: {
     fontSize: FontSizes.lg,
     fontWeight: '900',
     color: Colors.black,
-    marginBottom: Spacing.md,
+    marginLeft: Spacing.sm,
   },
   tipText: {
     fontSize: FontSizes.sm,
@@ -349,10 +358,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: Spacing.md,
   },
+  previewAppNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   previewAppName: {
     fontSize: FontSizes.sm,
     fontWeight: '900',
     color: Colors.black,
+    marginLeft: Spacing.xs,
   },
   previewTime: {
     fontSize: FontSizes.xs,
@@ -380,11 +394,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: Spacing.md,
   },
+  imageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.xs,
+  },
   previewImageText: {
     fontSize: FontSizes.md,
     fontWeight: '700',
     color: Colors.black,
-    marginBottom: Spacing.xs,
+    marginLeft: Spacing.xs,
   },
   previewImageUrl: {
     fontSize: FontSizes.xs,
