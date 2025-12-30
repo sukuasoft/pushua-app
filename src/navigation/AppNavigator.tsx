@@ -6,7 +6,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { SubscriptionsScreen } from '../screens/SubscriptionsScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
-import { Colors, FontSizes } from '../constants/theme';
+import { Colors, FontSizes, Spacing } from '../constants/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
@@ -19,6 +19,8 @@ export const AppNavigator = () => {
         headerShown: false,
         tabBarStyle: {...styles.tabBar, height: styles.tabBar.height + insets.bottom },
         tabBarActiveTintColor: Colors.black,
+        tabBarActiveBackgroundColor: Colors.primary,
+        tabBarItemStyle: styles.tabBarItem,
         tabBarInactiveTintColor: Colors.darkGray,
         tabBarLabelStyle: styles.tabLabel,
       }}
@@ -90,11 +92,13 @@ export const AppNavigator = () => {
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: Colors.white,
-    borderTopWidth: 3,
+    borderTopWidth: 0,
     borderTopColor: Colors.black,
     height: 60,
     paddingBottom: Platform.OS === 'android' ? 25 : 10,
-    paddingTop: 10,
+  },
+  tabBarItem: {
+    height: 60,
   },
   tabLabel: {
     fontSize: FontSizes.xs,
