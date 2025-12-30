@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderTopColor: Colors.black,
     height: 60,
-    paddingBottom: Platform.OS === 'android' ? 25 : 10,
   },
   tabBarItem: {
     height: 60,

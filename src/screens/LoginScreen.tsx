@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
   Image,
+  ImageBackground,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../contexts/AuthContext';
@@ -53,7 +54,7 @@ export const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
@@ -63,8 +64,13 @@ export const LoginScreen = () => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.header}>
-            <Text style={styles.logo}>PUSHUA</Text> 
-            <Text style={styles.tagline}>Push Notifications, Simplified</Text>
+            <ImageBackground style={{
+              width: 50,
+              height: 50,
+            }
+            }  source={require('../../assets/icon.png')} />
+
+            <ImageBackground style={styles.icon} source={require('../../assets/pushua-white.png')} />
           </View>
 
           <BrutalCard style={styles.card}>
@@ -103,7 +109,7 @@ export const LoginScreen = () => {
               title={isLogin ? 'ENTRAR' : 'CRIAR CONTA'}
               onPress={handleSubmit}
               loading={loading}
-              size="large"
+              size="medium"
               style={styles.submitButton}
             />
 
@@ -122,27 +128,31 @@ export const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  icon: {
+    width: 160,
+    height: 30,
+  },
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
   },
   keyboardAvoid: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
+    backgroundColor: Colors.white,
+
     justifyContent: 'center',
     padding: Spacing.lg,
   },
   header: {
     alignItems: 'center',
+    backgroundColor: Colors.black,
+    flexDirection: "row",
+    justifyContent: "center",
+    borderRadius: 30,
+    padding: Spacing.sm,
     marginBottom: Spacing.xl,
-  },
-  logo: {
-    fontSize: FontSizes.xxl * 1.5,
-    fontWeight: '900',
-    color: Colors.black,
-    marginBottom: Spacing.sm,
   },
   tagline: {
     fontSize: FontSizes.md,
@@ -150,13 +160,13 @@ const styles = StyleSheet.create({
     color: Colors.black,
   },
   card: {
-    padding: Spacing.xl,
+    padding: Spacing.md,
   },
   title: {
-    fontSize: FontSizes.xxl,
+    fontSize: FontSizes.xl,
     fontWeight: '900',
     color: Colors.black,
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
     textAlign: 'center',
   },
   submitButton: {
