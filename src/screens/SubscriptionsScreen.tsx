@@ -10,14 +10,13 @@ import {
 } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useNotifications } from '../hooks/useNotifications';
 import { subscriptionService, Subscription } from '../services/subscription.service';
 import { BrutalCard } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalInput } from '../components/BrutalInput';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import AppWrapper from '@/components/AppWrapper';
 
 export const SubscriptionsScreen = () => {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -117,70 +116,72 @@ export const SubscriptionsScreen = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <GestureHandlerRootView style={styles.container}>
-        <View style={styles.container}>
+    <AppWrapper>
+      <View style={styles.container}>
+        <GestureHandlerRootView style={styles.container}>
+          <View style={styles.container}>
 
-          <View style={styles.header}>
-            <View>
-              <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
-            </View>
-            <BrutalButton
-              title="+ NOVA"
-              onPress={handleOpenSheet}
-              size="medium"
-            />
-          </View>
-
-          <FlatList
-            data={subscriptions}
-            renderItem={renderSubscriptionItem}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContent}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={loadSubscriptions} />
-            }
-            ListEmptyComponent={
-              <BrutalCard>
-                <Text style={styles.emptyText}>
-                  Nenhuma subscrição encontrada{'\n'}
-                  Toque em + NOVA para criar
-                </Text>
-              </BrutalCard>
-            }
-          />
-
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={-1}
-            snapPoints={snapPoints}
-            enablePanDownToClose
-            backgroundStyle={styles.bottomSheetBackground}
-            handleIndicatorStyle={styles.handleIndicator}
-          >
-            <BottomSheetView style={styles.bottomSheetContent}>
-              <Text style={styles.sheetTitle}>Nova Subscrição</Text>
-
-              <BrutalInput
-                label="Nome do Tópico"
-                placeholder="ex: news, updates, alerts"
-                value={topicName}
-                onChangeText={setTopicName}
-                autoCapitalize="none"
-              />
-
+            <View style={styles.header}>
+              <View>
+                <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
+              </View>
               <BrutalButton
-                title="CRIAR SUBSCRIÇÃO"
-                onPress={handleCreateSubscription}
-                loading={creating}
-                size="large"
-                style={styles.createButton}
+                title="+ NOVA"
+                onPress={handleOpenSheet}
+                size="small"
               />
-            </BottomSheetView>
-          </BottomSheet>
-        </View>
-      </GestureHandlerRootView>
-    </SafeAreaView>
+            </View>
+
+            <FlatList
+              data={subscriptions}
+              renderItem={renderSubscriptionItem}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={loadSubscriptions} />
+              }
+              ListEmptyComponent={
+                <BrutalCard>
+                  <Text style={styles.emptyText}>
+                    Nenhuma subscrição encontrada{'\n'}
+                    Toque em + NOVA para criar
+                  </Text>
+                </BrutalCard>
+              }
+            />
+
+            <BottomSheet
+              ref={bottomSheetRef}
+              index={-1}
+              snapPoints={snapPoints}
+              enablePanDownToClose
+              backgroundStyle={styles.bottomSheetBackground}
+              handleIndicatorStyle={styles.handleIndicator}
+            >
+              <BottomSheetView style={styles.bottomSheetContent}>
+                <Text style={styles.sheetTitle}>Nova Subscrição</Text>
+
+                <BrutalInput
+                  label="Nome do Tópico"
+                  placeholder="ex: news, updates, alerts"
+                  value={topicName}
+                  onChangeText={setTopicName}
+                  autoCapitalize="none"
+                />
+
+                <BrutalButton
+                  title="CRIAR SUBSCRIÇÃO"
+                  onPress={handleCreateSubscription}
+                  loading={creating}
+                  size="large"
+                  style={styles.createButton}
+                />
+              </BottomSheetView>
+            </BottomSheet>
+          </View>
+        </GestureHandlerRootView>
+      </View>
+    </AppWrapper>
   );
 };
 

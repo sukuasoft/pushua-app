@@ -6,7 +6,7 @@ import { BrutalButton } from '../components/BrutalButton';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
 import { MaterialIcons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import AppWrapper from '@/components/AppWrapper';
 
 export const ProfileScreen = () => {
   const { user, signOut } = useAuth();
@@ -31,71 +31,73 @@ export const ProfileScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <AppWrapper>
+      <View style={styles.container}>
 
-      <View style={styles.header}>
-        <View>
-          <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
+        <View style={styles.header}>
+          <View>
+            <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
+          </View>
         </View>
-      </View>
 
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
-        <BrutalCard>
-          <BrutalCardHeader title="Informações da Conta" />
+        <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+          <BrutalCard>
+            <BrutalCardHeader title="Informações da Conta" />
 
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Email:</Text>
-            <Text style={styles.value}>{user?.email}</Text>
-          </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.value}>{user?.email}</Text>
+            </View>
 
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Domínio:</Text>
-            <BrutalBadge text={user?.domain || ''} variant="success" />
-          </View>
-        </BrutalCard>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>Domínio:</Text>
+              <BrutalBadge text={user?.domain || ''} variant="success" />
+            </View>
+          </BrutalCard>
 
-        <BrutalCard style={styles.apiCard}>
-          <BrutalCardHeader
-            title="API Key"
-            subtitle="Use esta chave para autenticar suas requisições"
-          />
+          <BrutalCard style={styles.apiCard}>
+            <BrutalCardHeader
+              title="API Key"
+              subtitle="Use esta chave para autenticar suas requisições"
+            />
 
-          <View style={styles.apiKeyBox}>
-            <Text style={styles.apiKeyText} numberOfLines={1}>
-              {user?.apiKey}
+            <View style={styles.apiKeyBox}>
+              <Text style={styles.apiKeyText} numberOfLines={1}>
+                {user?.apiKey}
+              </Text>
+            </View>
+
+            <BrutalButton
+              title="COPIAR API KEY"
+              onPress={handleCopyApiKey}
+              variant="secondary"
+              size="medium"
+            />
+          </BrutalCard>
+
+          <BrutalCard style={styles.aboutCard}>
+            <View style={styles.aboutTitleRow}>
+              <MaterialIcons name="info" size={24} color="black" />
+              <Text style={styles.aboutTitle}>Sobre o Pushua</Text>
+            </View>
+            <Text style={styles.aboutText}>
+              Pushua é uma plataforma simples e eficiente para envio de notificações push.
             </Text>
-          </View>
+            <Text style={styles.aboutText}>
+              Versão: 1.0.0
+            </Text>
+          </BrutalCard>
 
           <BrutalButton
-            title="COPIAR API KEY"
-            onPress={handleCopyApiKey}
-            variant="secondary"
+            title="SAIR"
+            onPress={handleLogout}
+            variant="outline"
             size="medium"
+            style={styles.logoutButton}
           />
-        </BrutalCard>
-
-        <BrutalCard style={styles.aboutCard}>
-          <View style={styles.aboutTitleRow}>
-            <MaterialIcons name="info" size={24} color="black" />
-            <Text style={styles.aboutTitle}>Sobre o Pushua</Text>
-          </View>
-          <Text style={styles.aboutText}>
-            Pushua é uma plataforma simples e eficiente para envio de notificações push.
-          </Text>
-          <Text style={styles.aboutText}>
-            Versão: 1.0.0
-          </Text>
-        </BrutalCard>
-
-        <BrutalButton
-          title="SAIR"
-          onPress={handleLogout}
-          variant="outline"
-          size="large"
-          style={styles.logoutButton}
-        />
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </View>
+    </AppWrapper>
   );
 };
 

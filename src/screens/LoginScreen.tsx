@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,13 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../contexts/AuthContext';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalInput } from '../components/BrutalInput';
 import { BrutalCard } from '../components/BrutalCard';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
+import { StatusBar } from 'expo-status-bar';
 
 export const LoginScreen = () => {
   const { signIn, signUp } = useAuth();
@@ -24,6 +25,8 @@ export const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [domain, setDomain] = useState('@');
   const [loading, setLoading] = useState(false);
+
+  const insets = useSafeAreaInsets();
 
   const handleSubmit = async () => {
     if (!email || !password || (!isLogin && !domain)) {
@@ -53,8 +56,22 @@ export const LoginScreen = () => {
     }
   };
 
+  useEffect(()=>{
+    setEmail('');
+    setPassword('');
+    setDomain('@');
+  }, [isLogin]);
+
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{
+      flex: 1,
+      backgroundColor: Colors.white,
+      paddingTop: insets.top,
+      paddingBottom: insets.bottom,
+    }}>
+      <StatusBar style="dark"  />
+      
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
@@ -123,7 +140,7 @@ export const LoginScreen = () => {
           </BrutalCard>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 };
 

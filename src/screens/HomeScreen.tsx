@@ -14,8 +14,8 @@ import { BrutalCard, BrutalCardHeader } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
+import AppWrapper from '@/components/AppWrapper';
 
 export const HomeScreen = () => {
   const { user } = useAuth();
@@ -83,52 +83,54 @@ export const HomeScreen = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-
-      <View style={styles.header}>
-        <View>
-          <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
+    <AppWrapper>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View>
+            <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
+          </View>
         </View>
-      </View>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={loadSubscriptions} />
-        }
-        style={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
-      >
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={loadSubscriptions} />
+          }
+          style={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
 
-        <BrutalCard style={styles.infoCard}>
-          <BrutalCardHeader title="Informações" />
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Domínio:</Text>
-            <BrutalBadge text={user?.domain || ''} variant="success" />
+          <BrutalCard style={styles.infoCard}>
+            <BrutalCardHeader title="Informações" />
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Domínio:</Text>
+              <BrutalBadge text={user?.domain || ''} variant="success" />
+            </View>
+
+          </BrutalCard>
+
+          <View style={styles.subscriptionsHeader}>
+            <Text style={styles.sectionTitle}>Minhas Subscrições</Text>
+            <Text style={styles.count}>{subscriptions.length}</Text>
           </View>
 
-        </BrutalCard>
+          <FlatList
+            scrollEnabled={false}
+            data={subscriptions}
+            renderItem={renderSubscriptionItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContent}
 
-        <View style={styles.subscriptionsHeader}>
-          <Text style={styles.sectionTitle}>Minhas Subscrições</Text>
-          <Text style={styles.count}>{subscriptions.length}</Text>
-        </View>
+            ListEmptyComponent={
+              <BrutalCard>
+                <Text style={styles.emptyText}>
+                  Você ainda não tem subscrições ativas
+                </Text>
+              </BrutalCard>
+            }
+          />
+        </ScrollView>
+      </View>
 
-        <FlatList
-          scrollEnabled={false}
-          data={subscriptions}
-          renderItem={renderSubscriptionItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
-
-          ListEmptyComponent={
-            <BrutalCard>
-              <Text style={styles.emptyText}>
-                Você ainda não tem subscrições ativas
-              </Text>
-            </BrutalCard>
-          }
-        />
-      </ScrollView>
-    </SafeAreaView>
+    </AppWrapper>
   );
 };
 
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: Colors.white,
   },
   header: {
     padding: Spacing.lg,

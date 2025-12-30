@@ -19,7 +19,7 @@ import { BrutalButton } from '../components/BrutalButton';
 import { BrutalInput } from '../components/BrutalInput';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../constants/theme';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import AppWrapper from '@/components/AppWrapper';
 
 export const NotificationsScreen = () => {
   const { user } = useAuth();
@@ -89,7 +89,8 @@ export const NotificationsScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <AppWrapper>
+    <View style={styles.container}>
     <GestureHandlerRootView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -242,7 +243,8 @@ export const NotificationsScreen = () => {
         </View>
       </KeyboardAvoidingView>
     </GestureHandlerRootView>
-    </SafeAreaView>
+    </View>
+    </AppWrapper>
   );
 };
 

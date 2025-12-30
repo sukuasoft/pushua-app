@@ -43,7 +43,7 @@ export function App() {
       <GestureHandlerRootView style={styles.container}>
         <AuthProvider>
           <AppContent />
-          <StatusBar style="dark" />
+          <StatusBar style="light" />
         </AuthProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
