@@ -9,6 +9,7 @@ import { AppNavigator } from './navigation/AppNavigator';
 import { AuthNavigator } from './navigation/AuthNavigator';
 import { Colors } from './constants/theme';
 import { useNotifications } from './hooks/useNotifications';
+import { initializeAds } from './services/ads.service';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -40,6 +41,10 @@ function AppContent() {
 }
 
 export function App() {
+  useEffect(() => {
+    initializeAds();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={styles.container}>

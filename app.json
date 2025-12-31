@@ -48,6 +48,13 @@
           "configureAndroidBackup": true,
           "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
         }
+      ],
+       [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-9859105175738939~4791250457",
+          "iosAppId": "ca-app-pub-9859105175738939~1526792868"
+        }
       ]
     ],
     "extra": {

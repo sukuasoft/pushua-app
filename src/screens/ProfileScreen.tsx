@@ -7,6 +7,7 @@ import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
 import { MaterialIcons } from '@expo/vector-icons';
 import AppWrapper from '@/components/AppWrapper';
+import BannerAdComponent from '../components/BannerAd';
 
 export const ProfileScreen = () => {
   const { user, signOut } = useAuth();
@@ -87,6 +88,8 @@ export const ProfileScreen = () => {
               Versão: 1.0.0
             </Text>
           </BrutalCard>
+
+          <BannerAdComponent />
 
           <BrutalButton
             title="SAIR"

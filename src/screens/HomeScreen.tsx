@@ -16,6 +16,7 @@ import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import AppWrapper from '@/components/AppWrapper';
+import BannerAdComponent from '../components/BannerAd';
 
 export const HomeScreen = () => {
   const { user } = useAuth();
@@ -128,6 +129,7 @@ export const HomeScreen = () => {
               </BrutalCard>
             }
           />
+          <BannerAdComponent />
         </ScrollView>
       </GestureHandlerRootView>
 

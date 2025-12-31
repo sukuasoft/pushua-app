@@ -17,6 +17,7 @@ import { BrutalInput } from '../components/BrutalInput';
 import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
 import AppWrapper from '@/components/AppWrapper';
+import BannerAdComponent from '../components/BannerAd';
 
 export const SubscriptionsScreen = () => {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -131,6 +132,8 @@ export const SubscriptionsScreen = () => {
                 size="small"
               />
             </View>
+
+            <BannerAdComponent />
 
             <FlatList
               data={subscriptions}

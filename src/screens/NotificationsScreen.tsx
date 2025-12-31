@@ -25,6 +25,7 @@ import { BrutalBadge } from '../components/BrutalBadge';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../constants/theme';
 import AppWrapper from '@/components/AppWrapper';
 import { useNotifications } from '../hooks/useNotifications';
+import BannerAdComponent from '../components/BannerAd';
 
 export const NotificationsScreen = () => {
   const { user } = useAuth();
@@ -170,6 +171,8 @@ export const NotificationsScreen = () => {
                   <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
                 </View>
               </View>
+
+              <BannerAdComponent />
 
               {/* Tab Selector */}
               <View style={styles.tabContainer}>
