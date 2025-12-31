@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { Platform, Alert } from 'react-native';
-import { notificationService } from '../services/notification.service';
+import { notificationService, NotificationItem } from '../services/notification.service';
 import * as SecureStore from 'expo-secure-store';
 
 Notifications.setNotificationHandler({
@@ -18,6 +18,11 @@ Notifications.setNotificationHandler({
 export function useNotifications() {
   const [expoPushToken, setExpoPushToken] = useState<string>('');
   const [notification, setNotification] = useState<Notifications.Notification>();
+  const [notificationHistory, setNotificationHistory] = useState<NotificationItem[]>([]);
+  const [notificationLoading, setNotificationLoading] = useState(false);
+  const [notificationError, setNotificationError] = useState<string | null>(null);
+  const [notificationPage, setNotificationPage] = useState(1);
+  const [notificationTotal, setNotificationTotal] = useState(0);
   const notificationListener = useRef<Notifications.Subscription>(null);
   const responseListener = useRef<Notifications.Subscription>(null);
 
@@ -52,10 +57,32 @@ export function useNotifications() {
     }
   };
 
+  const fetchNotifications = async (page: number = 1) => {
+    setNotificationLoading(true);
+    setNotificationError(null);
+    try {
+      const response = await notificationService.listNotifications(page, 50);
+      setNotificationHistory(response.data);
+      setNotificationPage(page);
+      setNotificationTotal(response.pagination.total);
+    } catch (error: any) {
+      console.error('Failed to fetch notifications:', error);
+      setNotificationError(error.response?.data?.message || 'Falha ao carregar notificações');
+    } finally {
+      setNotificationLoading(false);
+    }
+  };
+
   return {
     expoPushToken,
     notification,
     registerDevice,
+    fetchNotifications,
+    notificationHistory,
+    notificationLoading,
+    notificationError,
+    notificationPage,
+    notificationTotal,
   };
 }
 
