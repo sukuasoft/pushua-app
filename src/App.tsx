@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, ImageBackground } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -25,6 +25,8 @@ function AppContent() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
+        <ImageBackground style={styles.icon} source={require('../assets/pushua-white.png')} />
+
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
@@ -51,13 +53,18 @@ export function App() {
 }
 
 const styles = StyleSheet.create({
+  icon: {
+    width: 160,
+    height: 30,
+  },
   container: {
     flex: 1,
   },
   loadingContainer: {
     flex: 1,
+    gap: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.black,
   },
 });
