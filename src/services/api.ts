@@ -2,8 +2,18 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { config } from '../constants/config';
 
+export interface MetaPagination {
+  page: number;
+  perPage: number;
+  currentPage: number;
+  total: number;
+  lastPage: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
 const api = axios.create({
-  baseURL: config.api.baseURL +"/api",
+  baseURL: config.api.baseURL + '/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -34,7 +44,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Token expired or invalid
       await SecureStore.deleteItemAsync('token');
-      await SecureStore.deleteItemAsync('user');
+      await SecureStore.deleteItemAsync('apiKey');
     }
     return Promise.reject(error);
   }

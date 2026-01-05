@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService, User } from '../services/auth.service';
-import * as SecureStore from 'expo-secure-store';
 
 interface AuthContextData {
   user: User | null;
@@ -22,18 +21,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   async function loadStorageData() {
-    
+
     try {
       setLoading(true);
       // First check if a token exists
       const isAuth = await authService.isAuthenticated();
-      
+
       if (isAuth) {
         // Token exists, validate it by calling /users/me
         try {
           const user = await authService.getMe();
           setUser(user);
-          await SecureStore.setItemAsync('apiKey', user.apiKey);
         } catch (error) {
           // Token is invalid or expired, clear auth
           console.log('Token validation failed, clearing authentication');
@@ -56,7 +54,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await authService.login({ email, password });
       setUser(response.user);
-      await SecureStore.setItemAsync('apiKey', response.user.apiKey);
     } catch (error) {
       throw error;
     }
@@ -66,7 +63,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await authService.register({ email, password, domain });
       setUser(response.user);
-      await SecureStore.setItemAsync('apiKey', response.user.apiKey);
     } catch (error) {
       throw error;
     }
@@ -74,7 +70,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   async function signOut() {
     await authService.logout();
-    await SecureStore.deleteItemAsync('apiKey');
     setUser(null);
   }
 
@@ -82,7 +77,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const updatedUser = await authService.getMe();
       setUser(updatedUser);
-      await SecureStore.setItemAsync('apiKey', updatedUser.apiKey);
     } catch (error) {
       console.error('Error refreshing user:', error);
     }

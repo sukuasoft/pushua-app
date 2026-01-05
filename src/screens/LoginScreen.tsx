@@ -56,7 +56,7 @@ export const LoginScreen = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setEmail('');
     setPassword('');
     setDomain('@');
@@ -70,8 +70,8 @@ export const LoginScreen = () => {
       paddingTop: insets.top,
       paddingBottom: insets.bottom,
     }}>
-      <StatusBar style="dark"  />
-      
+      <StatusBar style="dark" />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
@@ -85,7 +85,7 @@ export const LoginScreen = () => {
               width: 50,
               height: 50,
             }
-            }  source={require('../../assets/icon.png')} />
+            } source={require('../../assets/icon.png')} />
 
             <ImageBackground style={styles.icon} source={require('../../assets/pushua-white.png')} />
           </View>

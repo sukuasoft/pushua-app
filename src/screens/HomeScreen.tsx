@@ -9,7 +9,8 @@ import {
   ImageBackground,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext'; import { MaterialIcons } from '@expo/vector-icons'; import { useNotifications } from '../hooks/useNotifications';
-import { subscriptionService, Subscription } from '../services/subscription.service';
+import { useSubscriptions } from '../hooks/useSubscriptions';
+import { Subscription, subscriptionService } from '../services/subscription.service';
 import { BrutalCard, BrutalCardHeader } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalBadge } from '../components/BrutalBadge';
@@ -19,9 +20,7 @@ import AppWrapper from '@/components/AppWrapper';
 
 export const HomeScreen = () => {
   const { user } = useAuth();
-  const { expoPushToken } = useNotifications();
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { subscriptions, loading, fetchSubscriptions } = useSubscriptions();
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -29,16 +28,13 @@ export const HomeScreen = () => {
   }, []);
 
   const loadSubscriptions = async () => {
-    setLoading(true);
-    try {
-      const data = await subscriptionService.getAll();
-      setSubscriptions(data);
-    } catch (error: any) {
-      Alert.alert('Erro', 'Não foi possível carregar as subscrições');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
+    await fetchSubscriptions(1, 20);
+    setRefreshing(false);
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadSubscriptions();
   };
 
   const handleDeleteSubscription = async (id: string) => {
@@ -84,8 +80,8 @@ export const HomeScreen = () => {
 
   return (
     <AppWrapper>
-             <GestureHandlerRootView style={styles.container}>
-     
+      <GestureHandlerRootView style={styles.container}>
+
         <View style={styles.header}>
           <View>
             <ImageBackground style={styles.icon} source={require('../../assets/pushua-green.png')} />
@@ -93,7 +89,7 @@ export const HomeScreen = () => {
         </View>
         <ScrollView
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={loadSubscriptions} />
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
           style={styles.scrollContainer}
           keyboardShouldPersistTaps="handled"

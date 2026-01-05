@@ -4,6 +4,7 @@ import * as Device from 'expo-device';
 import { Platform, Alert } from 'react-native';
 import { notificationService, NotificationItem } from '../services/notification.service';
 import * as SecureStore from 'expo-secure-store';
+import { MetaPagination } from '@/services/api';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -20,9 +21,10 @@ export function useNotifications() {
   const [notification, setNotification] = useState<Notifications.Notification>();
   const [notificationHistory, setNotificationHistory] = useState<NotificationItem[]>([]);
   const [notificationLoading, setNotificationLoading] = useState(false);
+  const [notificationLoadingMore, setNotificationLoadingMore] = useState(false);
   const [notificationError, setNotificationError] = useState<string | null>(null);
   const [notificationPage, setNotificationPage] = useState(1);
-  const [notificationTotal, setNotificationTotal] = useState(0);
+  const [paginationMeta, setPaginationMeta] = useState<MetaPagination | null>(null);
   const notificationListener = useRef<Notifications.Subscription>(null);
   const responseListener = useRef<Notifications.Subscription>(null);
 
@@ -57,14 +59,14 @@ export function useNotifications() {
     }
   };
 
-  const fetchNotifications = async (page: number = 1) => {
+  const fetchNotifications = async (page: number = 1, perPage: number = 50) => {
     setNotificationLoading(true);
     setNotificationError(null);
     try {
-      const response = await notificationService.listNotifications(page, 50);
+      const response = await notificationService.listNotifications(page, perPage);
       setNotificationHistory(response.data);
       setNotificationPage(page);
-      setNotificationTotal(response.pagination.total);
+      setPaginationMeta(response.meta);
     } catch (error: any) {
       console.error('Failed to fetch notifications:', error);
       setNotificationError(error.response?.data?.message || 'Falha ao carregar notificações');
@@ -73,16 +75,40 @@ export function useNotifications() {
     }
   };
 
+  const fetchMoreNotifications = async (perPage: number = 50) => {
+    if (!paginationMeta || !paginationMeta.hasNext || notificationLoadingMore) {
+      return;
+    }
+
+    setNotificationLoadingMore(true);
+    setNotificationError(null);
+    try {
+      const nextPage = notificationPage + 1;
+      const response = await notificationService.listNotifications(nextPage, perPage);
+      // Accumular dados da página anterior com os novos
+      setNotificationHistory((prev) => [...prev, ...response.data]);
+      setNotificationPage(nextPage);
+      setPaginationMeta(response.meta);
+    } catch (error: any) {
+      console.error('Failed to fetch more notifications:', error);
+      setNotificationError(error.response?.data?.message || 'Falha ao carregar mais notificações');
+    } finally {
+      setNotificationLoadingMore(false);
+    }
+  };
+
   return {
     expoPushToken,
     notification,
     registerDevice,
     fetchNotifications,
+    fetchMoreNotifications,
     notificationHistory,
     notificationLoading,
+    notificationLoadingMore,
     notificationError,
     notificationPage,
-    notificationTotal,
+    paginationMeta,
   };
 }
 
@@ -116,17 +142,17 @@ async function registerForPushNotificationsAsync() {
   if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
-    
+
     if (existingStatus !== 'granted') {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
-    
+
     if (finalStatus !== 'granted') {
       console.warn('Failed to get push token for push notification!');
       return;
     }
-    
+
     token = (await Notifications.getExpoPushTokenAsync()).data;
   } else {
     console.warn('Must use physical device for Push Notifications');

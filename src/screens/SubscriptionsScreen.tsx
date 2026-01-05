@@ -7,10 +7,12 @@ import {
   Alert,
   RefreshControl,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { subscriptionService, Subscription } from '../services/subscription.service';
+import { useSubscriptions } from '../hooks/useSubscriptions';
 import { BrutalCard } from '../components/BrutalCard';
 import { BrutalButton } from '../components/BrutalButton';
 import { BrutalInput } from '../components/BrutalInput';
@@ -19,8 +21,7 @@ import { Colors, Spacing, FontSizes } from '../constants/theme';
 import AppWrapper from '@/components/AppWrapper';
 
 export const SubscriptionsScreen = () => {
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { subscriptions, loading, loadingMore, fetchSubscriptions, fetchMoreSubscriptions, paginationMeta } = useSubscriptions();
   const [refreshing, setRefreshing] = useState(false);
   const [topicName, setTopicName] = useState('');
   const [creating, setCreating] = useState(false);
@@ -29,19 +30,22 @@ export const SubscriptionsScreen = () => {
   const snapPoints = ['25%', '50%'];
 
   useEffect(() => {
-    loadSubscriptions();
+    loadSubscriptionsFirstPage();
   }, []);
 
-  const loadSubscriptions = async () => {
-    setLoading(true);
-    try {
-      const data = await subscriptionService.getAll();
-      setSubscriptions(data);
-    } catch (error: any) {
-      Alert.alert('Erro', 'Não foi possível carregar as subscrições');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+  const loadSubscriptionsFirstPage = async () => {
+    await fetchSubscriptions(1, 20);
+    setRefreshing(false);
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadSubscriptionsFirstPage();
+  };
+
+  const handleLoadMore = () => {
+    if (paginationMeta?.has_next && !loadingMore) {
+      fetchMoreSubscriptions(20);
     }
   };
 
@@ -67,7 +71,7 @@ export const SubscriptionsScreen = () => {
       Alert.alert('Sucesso', 'Subscrição criada com sucesso!');
       setTopicName('');
       handleCloseSheet();
-      loadSubscriptions();
+      loadSubscriptionsFirstPage();
     } catch (error: any) {
       Alert.alert(
         'Erro',
@@ -88,7 +92,7 @@ export const SubscriptionsScreen = () => {
           try {
             await subscriptionService.delete(id);
             Alert.alert('Sucesso', 'Subscrição excluída com sucesso');
-            loadSubscriptions();
+            loadSubscriptionsFirstPage();
           } catch (error) {
             Alert.alert('Erro', 'Não foi possível excluir a subscrição');
           }
@@ -138,7 +142,17 @@ export const SubscriptionsScreen = () => {
               keyExtractor={(item) => item.id}
               contentContainerStyle={styles.listContent}
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={loadSubscriptions} />
+                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+              }
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={
+                loadingMore && paginationMeta?.has_next ? (
+                  <View style={styles.loadMoreContainer}>
+                    <ActivityIndicator size="small" color={Colors.primary} />
+                    <Text style={styles.loadMoreText}>Carregando mais...</Text>
+                  </View>
+                ) : null
               }
               ListEmptyComponent={
                 <BrutalCard>
@@ -285,5 +299,17 @@ const styles = StyleSheet.create({
   },
   createButton: {
     marginTop: Spacing.md,
+  },
+  loadMoreContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: Spacing.lg,
+    gap: Spacing.md,
+  },
+  loadMoreText: {
+    fontSize: FontSizes.md,
+    fontWeight: '600',
+    color: Colors.darkGray,
   },
 });

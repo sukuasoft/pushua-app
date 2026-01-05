@@ -28,7 +28,7 @@ import { useNotifications } from '../hooks/useNotifications';
 
 export const NotificationsScreen = () => {
   const { user } = useAuth();
-  const { fetchNotifications, notificationHistory, notificationLoading, notificationError, notificationPage, notificationTotal } = useNotifications();
+  const { fetchNotifications, fetchMoreNotifications, notificationHistory, notificationLoading, notificationLoadingMore, notificationError, paginationMeta } = useNotifications();
   const [topicName, setTopicName] = useState('');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -45,6 +45,12 @@ export const NotificationsScreen = () => {
       fetchNotifications(1);
     }
   }, [activeTab]);
+
+  const handleLoadMore = () => {
+    if (paginationMeta?.hasNext && !notificationLoadingMore) {
+      fetchMoreNotifications(50);
+    }
+  };
 
   const handleOpenPreview = useCallback(() => {
     if (!topicName.trim() || !title.trim() || !body.trim()) {
@@ -123,7 +129,7 @@ export const NotificationsScreen = () => {
     if (diffMins < 60) return `${diffMins}m atrás`;
     if (diffHours < 24) return `${diffHours}h atrás`;
     if (diffDays < 7) return `${diffDays}d atrás`;
-    
+
     return date.toLocaleDateString('pt-BR');
   };
 
@@ -135,9 +141,9 @@ export const NotificationsScreen = () => {
         </View>
         <Text style={styles.notificationTime}>{formatDate(item.createdAt)}</Text>
       </View>
-      
+
       <Text style={styles.notificationBody} numberOfLines={2}>{item.body}</Text>
-      
+
       <View style={styles.notificationFooter}>
         <BrutalBadge text={`${item.topicName}`} variant="primary" />
         <BrutalBadge text={`✓ ${item.successCount}`} variant="success" />
@@ -192,7 +198,7 @@ export const NotificationsScreen = () => {
                   onPress={() => setActiveTab('history')}
                 >
                   <Text style={[styles.tabText, activeTab === 'history' && styles.tabTextActive]}>
-                    HISTÓRICO ({notificationTotal})
+                    HISTÓRICO ({paginationMeta?.total || 0})
                   </Text>
                 </Pressable>
               </View>
@@ -299,6 +305,16 @@ export const NotificationsScreen = () => {
                           tintColor={Colors.primary}
                         />
                       }
+                      onEndReached={handleLoadMore}
+                      onEndReachedThreshold={0.5}
+                      ListFooterComponent={
+                        notificationLoadingMore && paginationMeta?.hasNext ? (
+                          <View style={styles.loadMoreContainer}>
+                            <ActivityIndicator size="small" color={Colors.primary} />
+                            <Text style={styles.loadMoreText}>Carregando mais...</Text>
+                          </View>
+                        ) : null
+                      }
                     />
                   )}
                 </View>
@@ -368,14 +384,14 @@ export const NotificationsScreen = () => {
       </View>
     </AppWrapper>
   );
-};const styles = StyleSheet.create({
+}; const styles = StyleSheet.create({
   icon: {
     width: 120,
     height: 20,
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.white,     
+    backgroundColor: Colors.white,
   },
   header: {
     backgroundColor: Colors.black,
@@ -655,5 +671,17 @@ export const NotificationsScreen = () => {
   },
   cancelButton: {
     marginBottom: Spacing.xl,
+  },
+  loadMoreContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: Spacing.lg,
+    gap: Spacing.md,
+  },
+  loadMoreText: {
+    fontSize: FontSizes.md,
+    fontWeight: '600',
+    color: Colors.darkGray,
   },
 });

@@ -6,10 +6,12 @@ export interface User {
   email: string;
   domain: string;
   apiKey: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface LoginResponse {
-  access_token: string;
+  accessToken: string;
   user: User;
 }
 
@@ -26,23 +28,28 @@ export interface LoginData {
 
 export const authService = {
   async register(data: RegisterData): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>('/users/register', data);
-    await SecureStore.setItemAsync('token', response.data.access_token);
+    const { data: response } = await api.post('/users/register', data);
+    await SecureStore.setItemAsync('token', response.data.accessToken);
+    await SecureStore.setItemAsync('apiKey', response.data.user.apiKey);
     return response.data;
   },
 
   async login(data: LoginData): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>('/users/login', data);
-    await SecureStore.setItemAsync('token', response.data.access_token);
+    const { data: response } = await api.post('/users/login', data);
+    await SecureStore.setItemAsync('token', response.data.accessToken);
+    await SecureStore.setItemAsync('apiKey', response.data.user.apiKey);
+
     return response.data;
   },
 
   async logout(): Promise<void> {
     await SecureStore.deleteItemAsync('token');
+    await SecureStore.deleteItemAsync('apiKey');
   },
 
   async getMe(): Promise<User> {
-    const response = await api.get<User>('/users/me');
+    const { data: response } = await api.get('/users/me');
+    await SecureStore.setItemAsync('apiKey', response.data.apiKey);
     return response.data;
   },
 
