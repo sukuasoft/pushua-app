@@ -18,7 +18,7 @@ import { BrutalCard } from '../components/BrutalCard';
 import { Colors, Spacing, FontSizes } from '../constants/theme';
 import { StatusBar } from 'expo-status-bar';
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ navigation }: { navigation: any }) => {
   const { signIn, signUp } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -130,6 +130,15 @@ export const LoginScreen = () => {
               style={styles.submitButton}
             />
 
+            {isLogin && (
+              <Text
+                style={styles.forgotPasswordLink}
+                onPress={() => navigation.navigate('ForgotPassword')}
+              >
+                Esqueci minha senha
+              </Text>
+            )}
+
             <BrutalButton
               title={isLogin ? 'Criar uma conta' : 'Já tenho conta'}
               onPress={() => setIsLogin(!isLogin)}
@@ -188,6 +197,14 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     marginTop: Spacing.md,
+  },
+  forgotPasswordLink: {
+    textAlign: 'center',
+    marginTop: Spacing.md,
+    color: Colors.primaryDark,
+    fontSize: FontSizes.sm,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
   },
   switchButton: {
     marginTop: Spacing.md,

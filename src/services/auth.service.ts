@@ -26,6 +26,15 @@ export interface LoginData {
   password: string;
 }
 
+export interface ForgotPasswordData {
+  email: string;
+}
+
+export interface ResetPasswordData {
+  otp: string;
+  newPassword: string;
+}
+
 export const authService = {
   async register(data: RegisterData): Promise<LoginResponse> {
     const { data: response } = await api.post('/users/register', data);
@@ -39,6 +48,16 @@ export const authService = {
     await SecureStore.setItemAsync('token', response.data.accessToken);
     await SecureStore.setItemAsync('apiKey', response.data.user.apiKey);
 
+    return response.data;
+  },
+
+  async forgotPassword(data: ForgotPasswordData): Promise<{ message: string }> {
+    const { data: response } = await api.post('/users/forgot-password', data);
+    return response.data;
+  },
+
+  async resetPassword(data: ResetPasswordData): Promise<{ message: string }> {
+    const { data: response } = await api.post('/users/reset-password', data);
     return response.data;
   },
 
